@@ -20,14 +20,9 @@ namespace AutoBattle
             List<Character> AllPlayers = new List<Character>();
             int currentTurn = 0;
             int numberOfPossibleTiles = grid.grids.Count;
-            Setup(); 
 
-
-            void Setup()
-            {
-
-                GetPlayerChoice();
-            }
+            //It is not necessary an method only calling other method
+            GetPlayerChoice();
 
             void GetPlayerChoice()
             {
@@ -52,14 +47,14 @@ namespace AutoBattle
                         CreatePlayerCharacter(Int32.Parse(choice));
                         break;
                     default:
+                        Console.WriteLine("This is not a class!\n");
                         GetPlayerChoice();
                         break;
                 }
             }
 
             void CreatePlayerCharacter(int classIndex)
-            {
-               
+            {               
                 CharacterClass characterClass = (CharacterClass)classIndex;
                 Console.WriteLine($"Player Class Choice: {characterClass}");
                 PlayerCharacter = new Character(characterClass);
@@ -68,7 +63,6 @@ namespace AutoBattle
                 PlayerCharacter.PlayerIndex = 0;
                 
                 CreateEnemyCharacter();
-
             }
 
             void CreateEnemyCharacter()
@@ -83,7 +77,6 @@ namespace AutoBattle
                 PlayerCharacter.BaseDamage = 20;
                 PlayerCharacter.PlayerIndex = 1;
                 StartGame();
-
             }
 
             void StartGame()
@@ -95,7 +88,6 @@ namespace AutoBattle
                 AllPlayers.Add(EnemyCharacter);
                 AlocatePlayers();
                 StartTurn();
-
             }
 
             void StartTurn(){
@@ -119,7 +111,8 @@ namespace AutoBattle
                 if(PlayerCharacter.Health == 0)
                 {
                     return;
-                } else if (EnemyCharacter.Health == 0)
+                }
+                else if (EnemyCharacter.Health == 0)
                 {
                     Console.Write(Environment.NewLine + Environment.NewLine);
 
@@ -128,7 +121,8 @@ namespace AutoBattle
                     Console.Write(Environment.NewLine + Environment.NewLine);
 
                     return;
-                } else
+                }
+                else
                 {
                     Console.Write(Environment.NewLine + Environment.NewLine);
                     Console.WriteLine("Click on any key to start the next turn...\n");
@@ -149,7 +143,6 @@ namespace AutoBattle
             void AlocatePlayers()
             {
                 AlocatePlayerCharacter();
-
             }
 
             void AlocatePlayerCharacter()
@@ -164,7 +157,8 @@ namespace AutoBattle
                     grid.grids[random] = RandomLocation;
                     PlayerCharacter.currentBox = grid.grids[random];
                     AlocateEnemyCharacter();
-                } else
+                }
+                else
                 {
                     AlocatePlayerCharacter();
                 }
@@ -186,11 +180,8 @@ namespace AutoBattle
                 else
                 {
                     AlocateEnemyCharacter();
-                }
-
-                
+                }                
             }
-
         }
     }
 }

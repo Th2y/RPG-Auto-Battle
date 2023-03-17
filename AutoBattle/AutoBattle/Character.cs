@@ -8,26 +8,29 @@ namespace AutoBattle
 {
     public class Character
     {
-        public string Name { get; set; }
+        public string Name;
         public float Health;
         public float BaseDamage;
-        public float DamageMultiplier { get; set; }
+        public float DamageMultiplier;
         public GridBox currentBox;
         public int PlayerIndex;
-        public Character Target { get; set; } 
+        public Character Target;
+
         public Character(CharacterClass characterClass)
         {
 
         }
 
-
         public bool TakeDamage(float amount)
         {
-            if((Health -= BaseDamage) <= 0)
+            Health -= amount;
+
+            if(Health <= 0)
             {
                 Die();
                 return true;
             }
+
             return false;
         }
 
@@ -43,12 +46,9 @@ namespace AutoBattle
 
         public void StartTurn(Grid battlefield)
         {
-
             if (CheckCloseTargets(battlefield)) 
             {
                 Attack(Target);
-                
-
                 return;
             }
             else
@@ -67,16 +67,18 @@ namespace AutoBattle
 
                         return;
                     }
-                } else if(currentBox.xIndex < Target.currentBox.xIndex)
+                }
+                else if(currentBox.xIndex < Target.currentBox.xIndex)
                 {
                     currentBox.ocupied = false;
                     battlefield.grids[currentBox.Index] = currentBox;
                     currentBox = (battlefield.grids.Find(x => x.Index == currentBox.Index + 1));
                     currentBox.ocupied = true;
-                    return;
                     battlefield.grids[currentBox.Index] = currentBox;
                     Console.WriteLine($"Player {PlayerIndex} walked right\n");
                     battlefield.drawBattlefield(5, 5);
+
+                    return;
                 }
 
                 if (this.currentBox.yIndex > Target.currentBox.yIndex)
@@ -88,6 +90,7 @@ namespace AutoBattle
                     this.currentBox.ocupied = true;
                     battlefield.grids[currentBox.Index] = currentBox;
                     Console.WriteLine($"Player {PlayerIndex} walked up\n");
+                    
                     return;
                 }
                 else if(this.currentBox.yIndex < Target.currentBox.yIndex)
