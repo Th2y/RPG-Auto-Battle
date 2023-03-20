@@ -8,9 +8,9 @@ namespace AutoBattle
     {
         public struct CharacterClassSpecific
         {
-            CharacterClass CharacterClass;
+            CharacterClass characterClass;
             float hpModifier;
-            float ClassDamage;
+            float classDamage;
             CharacterSkills[] skills;
         }
 
@@ -19,20 +19,20 @@ namespace AutoBattle
             public int xIndex;
             public int yIndex;
             public bool ocupied;
-            public int Index;
+            public int index;
 
             public GridBox(int x, int y, bool ocupied, int index)
             {
                 xIndex = x;
                 yIndex = y;
                 this.ocupied = ocupied;
-                this.Index = index;
+                this.index = index;
             }
         }
 
         public struct CharacterSkills
         {
-            string Name;
+            string name;
             float damage;
             float damageMultiplier;
         }

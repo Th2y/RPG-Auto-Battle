@@ -12,30 +12,29 @@ namespace AutoBattle
         public int xLenght;
         public int yLength;
 
-        public Grid(int Lines, int Columns)
+        public Grid(int lines, int columns)
         {
-            xLenght = Lines;
-            yLength = Columns;
-            Console.WriteLine("The battle field has been created\n");
+            xLenght = lines;
+            yLength = columns;
+            Console.WriteLine("The battle field has been created!");
 
-            for (int i = 0; i < Lines; i++)
-            {
-                grids.Add(newBox);
-                
-                for(int j = 0; j < Columns; j++)
+            for (int i = 0; i < lines; i++)
+            {                
+                for(int j = 0; j < columns; j++)
                 {
-                    GridBox newBox = new GridBox(j, i, false, (Columns * i + j));
-                    Console.Write($"{newBox.Index}\n");
+                    GridBox newBox = new GridBox(j, i, false, (columns * i + j));
+                    grids.Add(newBox);
+                    //Console.Write($"{newBox.Index}\n");
                 }
             }
         }
 
         // prints the matrix that indicates the tiles of the battlefield
-        public void drawBattlefield(int Lines, int Columns)
+        public void DrawBattlefield(int lines, int columns)
         {
-            for (int i = 0; i < Lines; i++)
+            for (int i = 0; i < lines; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int j = 0; j < columns; j++)
                 {
                     GridBox currentgrid = new GridBox();
                     if (currentgrid.ocupied)
