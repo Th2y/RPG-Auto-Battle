@@ -1,133 +1,252 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 using static AutoBattle.Types;
 
 namespace AutoBattle
 {
     public class Character
     {
-        public string Name;
+        public string name;
         public float health;
-        public float baseDamage;
-        public float DamageMultiplier;
-        public GridBox currentBox;
+        public float damage;
+        public float lifeRecovery;
         public int playerIndex;
+        public GridBox currentLocation;
         public Character target;
+        public bool hasAnActive = true;
 
-        public Character(CharacterClass characterClass)
+        public Character(int playerIndex) 
         {
-
+            this.playerIndex = playerIndex;
         }
 
-        public bool TakeDamage(float amount)
+        public Character(CharacterClassSpecific characterClass, int playerIndex)
         {
+            health = characterClass.health;
+            damage = characterClass.damage;
+            lifeRecovery = characterClass.lifeRecovery;
+            this.playerIndex = playerIndex;
+        }
+
+        public void TakeDamage(float amount)
+        {
+            hasAnActive = false;
+
             health -= amount;
 
             if(health <= 0)
             {
-                Die();
-                return true;
+                return;
             }
 
-            return false;
+            //Life recovery is as if the player had taken a potion after taking damage
+            health += lifeRecovery;
+            return;
         }
 
         public void Die()
         {
-            //TODO >> maybe kill him?
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(playerIndex == 1 ? "You win!" : "You lost!");
         }
 
-        public void WalkTO(bool canWalk)
+        public void StartTurn(Grid battlefield, bool targetIsPlayer)
         {
-
-        }
-
-        public void StartTurn(Grid battlefield)
-        {
-            if (CheckCloseTargets(battlefield)) 
+            if (CheckHaveNearbyTarget(battlefield, targetIsPlayer ? 0 : 1)) 
             {
-                Attack(target);
-                return;
+                Attack(battlefield);
             }
             else
-            {   // if there is no target close enough, calculates in wich direction this character should move to be closer to a possible target
-                if(this.currentBox.xIndex > target.currentBox.xIndex)
-                {
-                    if ((battlefield.grids.Exists(x => x.index == currentBox.index - 1)))
-                    {
-                        currentBox.ocupied = false;
-                        battlefield.grids[currentBox.index] = currentBox;
-                        currentBox = (battlefield.grids.Find(x => x.index == currentBox.index - 1));
-                        currentBox.ocupied = true;
-                        battlefield.grids[currentBox.index] = currentBox;
-                        Console.WriteLine($"Player {playerIndex} walked left\n");
-                        battlefield.DrawBattlefield(5, 5);
-
-                        return;
-                    }
-                }
-                else if(currentBox.xIndex < target.currentBox.xIndex)
-                {
-                    currentBox.ocupied = false;
-                    battlefield.grids[currentBox.index] = currentBox;
-                    currentBox = (battlefield.grids.Find(x => x.index == currentBox.index + 1));
-                    currentBox.ocupied = true;
-                    battlefield.grids[currentBox.index] = currentBox;
-                    Console.WriteLine($"Player {playerIndex} walked right\n");
-                    battlefield.DrawBattlefield(5, 5);
-
-                    return;
-                }
-
-                if (this.currentBox.yIndex > target.currentBox.yIndex)
-                {
-                    battlefield.DrawBattlefield(5, 5);
-                    this.currentBox.ocupied = false;
-                    battlefield.grids[currentBox.index] = currentBox;
-                    this.currentBox = (battlefield.grids.Find(x => x.index == currentBox.index - battlefield.xLenght));
-                    this.currentBox.ocupied = true;
-                    battlefield.grids[currentBox.index] = currentBox;
-                    Console.WriteLine($"Player {playerIndex} walked up\n");
-                    
-                    return;
-                }
-                else if(this.currentBox.yIndex < target.currentBox.yIndex)
-                {
-                    this.currentBox.ocupied = true;
-                    battlefield.grids[currentBox.index] = this.currentBox;
-                    this.currentBox = (battlefield.grids.Find(x => x.index == currentBox.index + battlefield.xLenght));
-                    this.currentBox.ocupied = false;
-                    battlefield.grids[currentBox.index] = currentBox;
-                    Console.WriteLine($"Player {playerIndex} walked down\n");
-                    battlefield.DrawBattlefield(5, 5);
-
-                    return;
-                }
+            {
+                //If there is no target close enough, calculates in wich direction this character should move to be closer to a possible target
+                CheckTargetPosition(battlefield, targetIsPlayer ? 0 : 1);
             }
         }
 
-        // Check in x and y directions if there is any character close enough to be a target.
-        bool CheckCloseTargets(Grid battlefield)
+        // Check in x and y directions if there is any character close enough to be a target
+        bool CheckHaveNearbyTarget(Grid battlefield, int targetIndex)
         {
-            bool left = (battlefield.grids.Find(x => x.index == currentBox.index - 1).ocupied);
-            bool right = (battlefield.grids.Find(x => x.index == currentBox.index + 1).ocupied);
-            bool up = (battlefield.grids.Find(x => x.index == currentBox.index + battlefield.xLenght).ocupied);
-            bool down = (battlefield.grids.Find(x => x.index == currentBox.index - battlefield.xLenght).ocupied);
-
-            if (left & right & up & down) 
+            //left
+            if (currentLocation.xIndex - 1 >= 0)
             {
-                return true;
+                if (battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == targetIndex)
+                {
+                    target = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character;
+                    return true;
+                }
             }
+
+            //right
+            if (currentLocation.xIndex + 1 <= battlefield.xLenght)
+            {
+                if (battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == targetIndex)
+                {
+                    target = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character;
+                    return true;
+                }
+            }
+
+            //up
+            if (currentLocation.yIndex - 1 >= 0)
+            {
+                if (battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == targetIndex)
+                {
+                    target = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character;
+                    return true;
+                }
+            }
+
+            //down
+            if (currentLocation.yIndex + 1 <= battlefield.yLength)
+            {
+                if (battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character.playerIndex == targetIndex)
+                {
+                    target = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character;
+                    return true;
+                }
+            }
+
             return false; 
         }
 
-        public void Attack(Character target)
+        void CheckTargetPosition(Grid battlefield, int targetIndex)
         {
-            var rand = new Random();
-            target.TakeDamage(rand.Next(0, (int)baseDamage));
-            Console.WriteLine($"Player {playerIndex} is attacking the player {this.target.playerIndex} and did {baseDamage} damage\n");
+            foreach(GridBox gridBox in battlefield.grids)
+            {
+                if(gridBox.character.playerIndex == targetIndex)
+                {
+                    target = gridBox.character;
+                    int diffLeft = target.currentLocation.xIndex - currentLocation.xIndex;
+                    int diffRight = currentLocation.xIndex - target.currentLocation.xIndex;
+                    int diffUp = target.currentLocation.yIndex - currentLocation.yIndex;
+                    int diffDown = currentLocation.yIndex - target.currentLocation.yIndex;                    
+
+                    //left
+                    if(diffLeft <= diffRight && diffLeft <= diffUp && diffLeft <= diffDown)
+                    {
+                        if (currentLocation.xIndex - 1 >= 0)
+                        {
+                            SetActualValuesGridBox(currentLocation.xIndex - 1, currentLocation.yIndex);
+                            return;
+                        }
+                    }
+                    //right
+                    if (diffRight <= diffUp && diffRight <= diffDown)
+                    {
+                        if (currentLocation.xIndex + 1 <= battlefield.xLenght)
+                        {
+                            SetActualValuesGridBox(currentLocation.xIndex + 1, currentLocation.yIndex);
+                            return;
+                        }
+                    }
+                    //up
+                    if (diffUp <= diffDown)
+                    {
+                        if (currentLocation.yIndex - 1 >= 0)
+                        {
+                            SetActualValuesGridBox(currentLocation.xIndex, currentLocation.yIndex - 1);
+                            return;
+                        }
+                    }
+                    //down
+                    else
+                    {
+                        if (currentLocation.yIndex + 1 <= battlefield.yLength)
+                        {
+                            SetActualValuesGridBox(currentLocation.xIndex, currentLocation.yIndex + 1);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            SortAnGridBoxToMovement();
+
+            void SetActualValuesGridBox(int x, int y)
+            {
+                battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
+                battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
+
+                currentLocation = battlefield.grids[x, y];
+                battlefield.grids[x, y].character = this;
+            }
+
+            void SortAnGridBoxToMovement()
+            {
+                var rand = new Random();
+                int index = rand.Next(0, 3);
+
+                //left
+                if (index == 0)
+                {                    
+                    if (currentLocation.xIndex - 1 >= 0)
+                    {
+                        currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
+                    }
+                    else
+                    {
+                        SortAnGridBoxToMovement();
+                    }                        
+                }
+                //right
+                else if (index == 1)
+                {                    
+                    if (currentLocation.xIndex + 1 <= battlefield.xLenght)
+                    {
+                        currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];
+                    }
+                    else
+                    {
+                        SortAnGridBoxToMovement();
+                    }
+                }
+                //up
+                else if (index == 2)
+                {
+                    if (currentLocation.yIndex - 1 >= 0)
+                    {
+                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex -1];
+                    }
+                    else
+                    {
+                        SortAnGridBoxToMovement();
+                    }
+                }
+                //down
+                else
+                {
+                    if (currentLocation.yIndex + 1 <= battlefield.yLength)
+                    {
+                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1];
+                    }
+                    else
+                    {
+                        SortAnGridBoxToMovement();
+                    }
+                }
+            }
+        }
+
+        public void Attack(Grid battlefield)
+        {
+            target.TakeDamage(damage);
+            battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
+            battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
+            currentLocation = battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex];
+            battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex].character = this;
+
+            if (playerIndex == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"Player is attacking the enemy and did {damage} damage");
+                Console.WriteLine($"Enemy health: {target.health}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Enemy is attacking the player and did {damage} damage");
+                Console.WriteLine($"Player health: {target.health}");
+            }
         }
     }
 }

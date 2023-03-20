@@ -1,54 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 using static AutoBattle.Types;
 
 namespace AutoBattle
 {
     public class Grid
     {
-        public List<GridBox> grids = new List<GridBox>();
+        public GridBox[,] grids;
         public int xLenght;
         public int yLength;
 
         public Grid(int lines, int columns)
         {
+            grids = new GridBox[lines, columns];
             xLenght = lines;
             yLength = columns;
-            Console.WriteLine("The battle field has been created!");
 
-            for (int i = 0; i < lines; i++)
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("The battle field has been created!");
+            Console.WriteLine("--------------------------------");
+            Console.Write(Environment.NewLine);
+
+            for (int x = 0; x < lines; x++)
             {                
-                for(int j = 0; j < columns; j++)
+                for(int y = 0; y < columns; y++)
                 {
-                    GridBox newBox = new GridBox(j, i, false, (columns * i + j));
-                    grids.Add(newBox);
-                    //Console.Write($"{newBox.Index}\n");
+                    GridBox newBox = new GridBox(x, y, false, x + y);
+                    grids[x, y] = newBox;
                 }
             }
         }
 
-        // prints the matrix that indicates the tiles of the battlefield
-        public void DrawBattlefield(int lines, int columns)
-        {
-            for (int i = 0; i < lines; i++)
+        //Prints the matrix that indicates the tiles of the battlefield
+        public void DrawBattlefield(int lines, int columns, bool isPlayerTime, Character player, Character enemy)
+        {            
+            if (isPlayerTime)
             {
-                for (int j = 0; j < columns; j++)
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"Player in {player.currentLocation.xIndex}, {player.currentLocation.yIndex}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Enemy in {enemy.currentLocation.xIndex}, {enemy.currentLocation.yIndex}");
+            }
+
+            for (int x = 0; x < lines; x++)
+            {
+                for (int y = 0; y < columns; y++)
                 {
-                    GridBox currentgrid = new GridBox();
-                    if (currentgrid.ocupied)
+                    if (grids[x, y].character.playerIndex == 0)
                     {
-                        Console.Write("[X]\t");
+                        Console.Write("[P]\t");
+                    }
+                    else if (grids[x, y].character.playerIndex == 1)
+                    {
+                        Console.Write("[E]\t");
                     }
                     else
                     {
                         Console.Write($"[ ]\t");
                     }
                 }
-                Console.Write(Environment.NewLine + Environment.NewLine);
+                Console.Write(Environment.NewLine);
             }
-            Console.Write(Environment.NewLine + Environment.NewLine);
+            Console.Write(Environment.NewLine);
         }
     }
 }
