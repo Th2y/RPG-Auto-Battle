@@ -246,7 +246,10 @@ namespace AutoBattle
                     AlocateEnemyCharacter();
                     AlocatePlayerCharacter();
                 }
-                
+
+                enemyCharacter.target = playerCharacter;
+                playerCharacter.target = enemyCharacter;
+
                 StartTurn();
                 StartGame();
             }

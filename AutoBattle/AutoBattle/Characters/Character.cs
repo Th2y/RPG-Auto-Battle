@@ -204,12 +204,10 @@ namespace AutoBattle.Characters
                 //left
                 if (index == 0)
                 {
-                    if (currentLocation.xIndex - 1 >= 0)
+                    if (currentLocation.xIndex - 1 >= 0 &&
+                        battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == -1)
                     {
-                        if(battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == -1)
-                            currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
-                        else
-                            SortAnGridBoxToMovement();
+                        currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
                     }
                     else
                     {
@@ -219,12 +217,10 @@ namespace AutoBattle.Characters
                 //right
                 else if (index == 1)
                 {
-                    if (currentLocation.xIndex + 1 <= battlefield.xLenght)
+                    if (currentLocation.xIndex + 1 <= battlefield.xLenght && 
+                        battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
                     {
-                        if(battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
-                            currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];
-                        else
-                            SortAnGridBoxToMovement();
+                        currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];
                     }
                     else
                     {
@@ -234,12 +230,10 @@ namespace AutoBattle.Characters
                 //up
                 else if (index == 2)
                 {
-                    if (currentLocation.yIndex - 1 >= 0)
+                    if (currentLocation.yIndex - 1 >= 0 &&
+                        battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == -1)
                     {
-                        if(battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == -1)
-                            currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1];
-                        else
-                            SortAnGridBoxToMovement();
+                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1];
                     }
                     else
                     {
@@ -249,12 +243,10 @@ namespace AutoBattle.Characters
                 //down
                 else
                 {
-                    if (currentLocation.yIndex + 1 <= battlefield.yLength)
+                    if (currentLocation.yIndex + 1 <= battlefield.yLength &&
+                        battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character.playerIndex == -1)
                     {
-                        if(battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character.playerIndex == -1)
-                            currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1];
-                        else 
-                            SortAnGridBoxToMovement();
+                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1];
                     }
                     else
                     {

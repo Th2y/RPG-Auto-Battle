@@ -12,8 +12,8 @@ namespace AutoBattle.Grids
         public Grid(int lines, int columns)
         {
             grids = new GridBox[lines, columns];
-            xLenght = lines;
-            yLength = columns;
+            xLenght = lines - 1;
+            yLength = columns - 1;
 
             Console.WriteLine("--------------------------------");
             Console.WriteLine("The battle field has been created!");
