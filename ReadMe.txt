@@ -1,4 +1,4 @@
-###$Este projeto foi desenvolvido por Thayane Carvalho dos Santos
+#### Este projeto foi desenvolvido por Thayane Carvalho dos Santos
 
 # Kokku Software Engineer Applicant Test
 
