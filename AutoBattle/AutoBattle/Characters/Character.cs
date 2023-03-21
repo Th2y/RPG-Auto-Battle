@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using static AutoBattle.Types;
+using AutoBattle.Grids;
 
-namespace AutoBattle
+namespace AutoBattle.Characters
 {
     public class Character
     {
@@ -21,7 +20,7 @@ namespace AutoBattle
         private float defaultLifeRecovery;
 
         //Creating an empty character
-        public Character(int playerIndex) 
+        public Character(int playerIndex)
         {
             this.playerIndex = playerIndex;
         }
@@ -44,7 +43,7 @@ namespace AutoBattle
 
             health -= amount;
 
-            if(health <= 0)
+            if (health <= 0)
             {
                 return;
             }
@@ -72,7 +71,7 @@ namespace AutoBattle
 
         public void StartTurn(Grid battlefield, bool targetIsPlayer)
         {
-            if (CheckHaveNearbyTarget(battlefield, targetIsPlayer ? 0 : 1)) 
+            if (CheckHaveNearbyTarget(battlefield, targetIsPlayer ? 0 : 1))
             {
                 Attack(battlefield);
             }
@@ -127,9 +126,9 @@ namespace AutoBattle
                         return true;
                     }
                 }
-            }            
+            }
 
-            return false; 
+            return false;
         }
 
         private void CheckTargetPosition(Grid battlefield, int targetIndex)
@@ -184,7 +183,7 @@ namespace AutoBattle
                         }
                     }
                 }
-            }            
+            }
 
             SortAnGridBoxToMovement();
 
@@ -204,24 +203,28 @@ namespace AutoBattle
 
                 //left
                 if (index == 0)
-                {                    
-                    if (currentLocation.xIndex - 1 >= 0 && 
-                        battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == -1)
+                {
+                    if (currentLocation.xIndex - 1 >= 0)
                     {
-                        currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
+                        if(battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == -1)
+                            currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
+                        else
+                            SortAnGridBoxToMovement();
                     }
                     else
                     {
                         SortAnGridBoxToMovement();
-                    }                        
+                    }
                 }
                 //right
                 else if (index == 1)
-                {                    
-                    if (currentLocation.xIndex + 1 <= battlefield.xLenght &&
-                        battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
+                {
+                    if (currentLocation.xIndex + 1 <= battlefield.xLenght)
                     {
-                        currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];
+                        if(battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
+                            currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];
+                        else
+                            SortAnGridBoxToMovement();
                     }
                     else
                     {
@@ -231,10 +234,12 @@ namespace AutoBattle
                 //up
                 else if (index == 2)
                 {
-                    if (currentLocation.yIndex - 1 >= 0 &&
-                        battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == -1)
+                    if (currentLocation.yIndex - 1 >= 0)
                     {
-                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex -1];
+                        if(battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == -1)
+                            currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1];
+                        else
+                            SortAnGridBoxToMovement();
                     }
                     else
                     {
@@ -244,10 +249,12 @@ namespace AutoBattle
                 //down
                 else
                 {
-                    if (currentLocation.yIndex + 1 <= battlefield.yLength &&
-                        battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character.playerIndex == -1)
+                    if (currentLocation.yIndex + 1 <= battlefield.yLength)
                     {
-                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1];
+                        if(battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1].character.playerIndex == -1)
+                            currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex + 1];
+                        else 
+                            SortAnGridBoxToMovement();
                     }
                     else
                     {
@@ -259,7 +266,7 @@ namespace AutoBattle
 
         public void Attack(Grid battlefield)
         {
-            if(skill.turnsToWork > 0)
+            if (skill.turnsToWork > 0)
             {
                 skill.turnsToWork--;
                 damage *= skill.damageMultiplier;

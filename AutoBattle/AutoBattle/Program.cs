@@ -1,5 +1,6 @@
 ﻿using System;
-using static AutoBattle.Types;
+using AutoBattle.Characters;
+using AutoBattle.Grids;
 
 namespace AutoBattle
 {
