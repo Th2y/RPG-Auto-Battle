@@ -24,7 +24,7 @@ namespace AutoBattle.Grids
             {
                 for (int y = 0; y < columns; y++)
                 {
-                    GridBox newBox = new GridBox(x, y, false, x + y);
+                    GridBox newBox = new GridBox(x, y, x + y);
                     grids[x, y] = newBox;
                 }
             }

@@ -16,8 +16,8 @@ namespace AutoBattle.Characters
         public bool isInvisible = false;
         public CharacterSkill skill;
 
-        private float defaultDamage;
-        private float defaultLifeRecovery;
+        private readonly float defaultDamage;
+        private readonly float defaultLifeRecovery;
 
         //Creating an empty character
         public Character(int playerIndex)
@@ -190,8 +190,6 @@ namespace AutoBattle.Characters
             void SetActualValuesGridBox(int x, int y)
             {
                 battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
-                battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
-
                 currentLocation = battlefield.grids[x, y];
                 battlefield.grids[x, y].character = this;
             }
@@ -270,7 +268,6 @@ namespace AutoBattle.Characters
 
             target.TakeDamage(damage);
             battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
-            battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
             currentLocation = battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex];
             battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex].character = this;
 
