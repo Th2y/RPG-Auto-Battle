@@ -1,7 +1,7 @@
-﻿using System;
-using static AutoBattle.Types;
+﻿using AutoBattle.Characters;
+using System;
 
-namespace AutoBattle
+namespace AutoBattle.Grids
 {
     public class Grid
     {
@@ -12,8 +12,8 @@ namespace AutoBattle
         public Grid(int lines, int columns)
         {
             grids = new GridBox[lines, columns];
-            xLenght = lines;
-            yLength = columns;
+            xLenght = lines - 1;
+            yLength = columns - 1;
 
             Console.WriteLine("--------------------------------");
             Console.WriteLine("The battle field has been created!");
@@ -21,10 +21,10 @@ namespace AutoBattle
             Console.Write(Environment.NewLine);
 
             for (int x = 0; x < lines; x++)
-            {                
-                for(int y = 0; y < columns; y++)
+            {
+                for (int y = 0; y < columns; y++)
                 {
-                    GridBox newBox = new GridBox(x, y, false, x + y);
+                    GridBox newBox = new GridBox(x, y, x + y);
                     grids[x, y] = newBox;
                 }
             }
@@ -32,7 +32,7 @@ namespace AutoBattle
 
         //Prints the matrix that indicates the tiles of the battlefield
         public void DrawBattlefield(int lines, int columns, bool isPlayerTime, Character player, Character enemy)
-        {            
+        {
             if (isPlayerTime)
             {
                 Console.ForegroundColor = ConsoleColor.Blue;

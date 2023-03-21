@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using static AutoBattle.Types;
+﻿using AutoBattle.Grids;
+using System;
 
-namespace AutoBattle
+namespace AutoBattle.Characters
 {
     public class Character
     {
@@ -17,11 +16,11 @@ namespace AutoBattle
         public bool isInvisible = false;
         public CharacterSkill skill;
 
-        private float defaultDamage;
-        private float defaultLifeRecovery;
+        private readonly float defaultDamage;
+        private readonly float defaultLifeRecovery;
 
         //Creating an empty character
-        public Character(int playerIndex) 
+        public Character(int playerIndex)
         {
             this.playerIndex = playerIndex;
         }
@@ -44,7 +43,7 @@ namespace AutoBattle
 
             health -= amount;
 
-            if(health <= 0)
+            if (health <= 0)
             {
                 return;
             }
@@ -72,7 +71,7 @@ namespace AutoBattle
 
         public void StartTurn(Grid battlefield, bool targetIsPlayer)
         {
-            if (CheckHaveNearbyTarget(battlefield, targetIsPlayer ? 0 : 1)) 
+            if (CheckHaveNearbyTarget(battlefield, targetIsPlayer ? 0 : 1))
             {
                 Attack(battlefield);
             }
@@ -127,9 +126,9 @@ namespace AutoBattle
                         return true;
                     }
                 }
-            }            
+            }
 
-            return false; 
+            return false;
         }
 
         private void CheckTargetPosition(Grid battlefield, int targetIndex)
@@ -184,15 +183,13 @@ namespace AutoBattle
                         }
                     }
                 }
-            }            
+            }
 
             SortAnGridBoxToMovement();
 
             void SetActualValuesGridBox(int x, int y)
             {
                 battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
-                battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
-
                 currentLocation = battlefield.grids[x, y];
                 battlefield.grids[x, y].character = this;
             }
@@ -204,8 +201,8 @@ namespace AutoBattle
 
                 //left
                 if (index == 0)
-                {                    
-                    if (currentLocation.xIndex - 1 >= 0 && 
+                {
+                    if (currentLocation.xIndex - 1 >= 0 &&
                         battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex].character.playerIndex == -1)
                     {
                         currentLocation = battlefield.grids[currentLocation.xIndex - 1, currentLocation.yIndex];
@@ -213,11 +210,11 @@ namespace AutoBattle
                     else
                     {
                         SortAnGridBoxToMovement();
-                    }                        
+                    }
                 }
                 //right
                 else if (index == 1)
-                {                    
+                {
                     if (currentLocation.xIndex + 1 <= battlefield.xLenght &&
                         battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
                     {
@@ -234,7 +231,7 @@ namespace AutoBattle
                     if (currentLocation.yIndex - 1 >= 0 &&
                         battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1].character.playerIndex == -1)
                     {
-                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex -1];
+                        currentLocation = battlefield.grids[currentLocation.xIndex, currentLocation.yIndex - 1];
                     }
                     else
                     {
@@ -259,7 +256,7 @@ namespace AutoBattle
 
         public void Attack(Grid battlefield)
         {
-            if(skill.turnsToWork > 0)
+            if (skill.turnsToWork > 0)
             {
                 skill.turnsToWork--;
                 damage *= skill.damageMultiplier;
@@ -271,7 +268,6 @@ namespace AutoBattle
 
             target.TakeDamage(damage);
             battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].character = new Character(-1);
-            battlefield.grids[currentLocation.xIndex, currentLocation.yIndex].ocupied = false;
             currentLocation = battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex];
             battlefield.grids[target.currentLocation.xIndex, target.currentLocation.yIndex].character = this;
 
