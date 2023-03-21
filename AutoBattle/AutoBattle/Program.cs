@@ -12,7 +12,6 @@ namespace AutoBattle
             Grid grid;
             Character playerCharacter;
             Character enemyCharacter;
-            //List<Character> allPlayers = new List<Character>();
 
             int currentTurn = 0;
             int gridSizeX = 0;
@@ -266,9 +265,6 @@ namespace AutoBattle
                 //populates the character variables and targets
                 enemyCharacter.target = playerCharacter;
                 playerCharacter.target = enemyCharacter;
-
-                //allPlayers.Add(playerCharacter);
-                //allPlayers.Add(enemyCharacter);
             }
 
             void StartTurn()
