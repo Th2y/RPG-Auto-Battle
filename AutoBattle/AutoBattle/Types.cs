@@ -40,27 +40,47 @@
         public struct CharacterSkill
         {
             public CharacterSkills skill;
-            public bool hasUsedTheSkill;
             public int turnsToWork;
             public float damageMultiplier;
-            public float healthRecovery;
+            public float lifeRecovery;
 
-            public CharacterSkill(CharacterSkills skill, int turnsToWork, float damageMultiplier, float healthRecovery)
+            public CharacterSkill(CharacterSkills skill)
             {
                 this.skill = skill;
-                this.turnsToWork = turnsToWork;
-                this.damageMultiplier = damageMultiplier;
-                this.healthRecovery = healthRecovery;
-                hasUsedTheSkill = false;
+
+                if (skill == CharacterSkills.Bleed)
+                {
+                    this.turnsToWork = 2;
+                    this.damageMultiplier = 1.5f;
+                    this.lifeRecovery = 1;
+                }
+                else if(skill == CharacterSkills.Heal)
+                {
+                    this.turnsToWork = 2;
+                    this.damageMultiplier = 1;
+                    this.lifeRecovery = 1.5f;
+                }
+                else if(skill == CharacterSkills.StrongAttack)
+                {
+                    this.turnsToWork = 1;
+                    this.damageMultiplier = 2;
+                    this.lifeRecovery = 1;
+                }
+                else
+                {
+                    this.turnsToWork = 0;
+                    this.damageMultiplier = 1;
+                    this.lifeRecovery = 1;
+                }
             }
         }
 
-        public enum CharacterSkills : uint
+        public enum CharacterSkills
         {
-            Bleed = 1,
-            Heal = 2,
-            StrongAttack = 3,
-            Invisibility = 4
+            Bleed,
+            Heal,
+            StrongAttack,
+            Invisibility
         }
 
         public enum CharacterClass : uint
