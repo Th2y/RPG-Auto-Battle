@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using static AutoBattle.Types;
 
 namespace AutoBattle
@@ -13,22 +11,26 @@ namespace AutoBattle
             Grid grid;
             Character playerCharacter;
             Character enemyCharacter;
-            List<Character> allPlayers = new List<Character>();
+            //List<Character> allPlayers = new List<Character>();
+
             int currentTurn = 0;
             int gridSizeX = 0;
             int gridSizeY = 0;
             int waitTime = 0;
             bool isPlayerTime = true;
+
             CharacterClassSpecific classPaladin;
             CharacterClassSpecific classWarrior;
             CharacterClassSpecific classCleric;
             CharacterClassSpecific classArcher;
             #endregion
 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Hi, welcome to the Thayane Carvalho RPG Auto Battle Game!");
+
             SetClassSpecifcValues();
 
             #region Methods
-
             //Seting the health, damage and lifeRecovery of each class type
             void SetClassSpecifcValues()
             {
@@ -44,8 +46,6 @@ namespace AutoBattle
             //Getting all of the player choices
             void GetPlayerChoices()
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("Hi, welcome to the Thayane Carvalho RPG Auto Battle Game!");
                 GetPlayerWaitTimeChoice();
                 GetPlayerGridChoice(true);
                 GetPlayerGridChoice(false);
@@ -67,20 +67,26 @@ namespace AutoBattle
                     if(value == 1)
                     {
                         isPlayerTime = true;
+                        Console.Write(Environment.NewLine);
                         GetPlayerTypeChoice();
                     }
                     else if(value == 2)
                     {
                         isPlayerTime = false;
+                        Console.Write(Environment.NewLine);
                         GetPlayerTypeChoice();
                     }
                     else
                     {
+                        Console.Write("Incorrect value!");
+                        Console.Write(Environment.NewLine);
                         GetPlayerWantsToStart();
                     }
                 }
                 else
                 {
+                    Console.Write("Incorrect value!");
+                    Console.Write(Environment.NewLine);
                     GetPlayerWantsToStart();
                 }
             }
@@ -92,10 +98,13 @@ namespace AutoBattle
                 Console.Write(Environment.NewLine);
                 Console.WriteLine("--------------------------------");
                 Console.WriteLine("Choose how many seconds you want to wait for an action to be performed automatically");
+                Console.WriteLine("The minimum is 5 seconds");
                 string choice = Console.ReadLine();
                 int value;
                 if (int.TryParse(choice, out value))
                 {
+                    if(value < 5) value = 5;
+
                     waitTime = value * 1000;
                     Console.WriteLine("--------------------------------");
                     Console.Write(Environment.NewLine);
@@ -148,31 +157,21 @@ namespace AutoBattle
             void GetPlayerTypeChoice()
             {
                 Console.WriteLine("Choose between one of this classes:");
-                Console.WriteLine($"[1] Paladin - Health: {classPaladin.health}, Damage: {classPaladin.damage}, Life recovery: {classPaladin.lifeRecovery}");
-                Console.WriteLine($"[2] Warrior - Health: {classWarrior.health}, Damage: {classWarrior.damage}, Life recovery: {classWarrior.lifeRecovery}");
-                Console.WriteLine($"[3] Cleric - Health: {classCleric.health}, Damage: {classCleric.damage}, Life recovery: {classCleric.lifeRecovery}");
-                Console.WriteLine($"[4] Archer - Health: {classArcher.health}, Damage: {classArcher.damage}, Life recovery: {classArcher.lifeRecovery}");
-                //store the player choice in a variable
+                Console.WriteLine($"[1] Paladin - Health: {classPaladin.health}, Damage: {classPaladin.damage}, Life recovery: {classPaladin.lifeRecovery}, Skill: Bleed (50% more damage on your first 2 attacks)");
+                Console.WriteLine($"[2] Warrior - Health: {classWarrior.health}, Damage: {classWarrior.damage}, Life recovery: {classWarrior.lifeRecovery}, Skill: Strong Attack (Your first attack will be times 2)");
+                Console.WriteLine($"[3] Cleric - Health: {classCleric.health}, Damage: {classCleric.damage}, Life recovery: {classCleric.lifeRecovery}, Skill: Heal (50% more life recovery on enemy's first 2 attacks)");
+                Console.WriteLine($"[4] Archer - Health: {classArcher.health}, Damage: {classArcher.damage}, Life recovery: {classArcher.lifeRecovery}, Skill: Invisibility (You will become invisible in the first round)");
+                
+                //Store the player choice in a variable
                 string choiceClass = Console.ReadLine();
-
-                switch (choiceClass)
+                if(choiceClass == "1" || choiceClass == "2" || choiceClass == "3" || choiceClass == "4")
                 {
-                    case "1":
-                        CreatePlayerCharacter(Int32.Parse(choiceClass));
-                        break;
-                    case "2":
-                        CreatePlayerCharacter(Int32.Parse(choiceClass));
-                        break;
-                    case "3":
-                        CreatePlayerCharacter(Int32.Parse(choiceClass));
-                        break;
-                    case "4":
-                        CreatePlayerCharacter(Int32.Parse(choiceClass));
-                        break;
-                    default:
-                        Console.WriteLine("This is not a class!");
-                        GetPlayerChoices();
-                        break;
+                    CreatePlayerCharacter(Int32.Parse(choiceClass));
+                }
+                else
+                {
+                    Console.WriteLine("This is not a class!");
+                    GetPlayerChoices();
                 }
             }            
 
@@ -196,13 +195,34 @@ namespace AutoBattle
                 }
             }
 
+            //Setting the CharacterSkill values by CharacterClass
+            CharacterSkill CharacterSkill(CharacterClass characterClass)
+            {
+                if (characterClass == CharacterClass.Paladin)
+                {
+                    return new CharacterSkill(CharacterSkills.Bleed);
+                }
+                else if (characterClass == CharacterClass.Warrior)
+                {
+                    return new CharacterSkill(CharacterSkills.StrongAttack);
+                }
+                else if (characterClass == CharacterClass.Cleric)
+                {
+                    return new CharacterSkill(CharacterSkills.Heal);
+                }
+                else
+                {
+                    return new CharacterSkill(CharacterSkills.Invisibility);
+                }
+            }
+
             void CreatePlayerCharacter(int classIndex)
             {
                 Console.Write(Environment.NewLine);
                 CharacterClass characterClass = (CharacterClass)classIndex;
                 CharacterClassSpecific characterClassSpecific = GetCharacterClassSpecific(characterClass);
                 Console.WriteLine($"Player class choice: {characterClass}");
-                playerCharacter = new Character(characterClassSpecific, 0);
+                playerCharacter = new Character(characterClassSpecific, 0, CharacterSkill(characterClass));
                 
                 CreateEnemyCharacter();
             }
@@ -210,12 +230,10 @@ namespace AutoBattle
             void CreateEnemyCharacter()
             {
                 //Randomly choose the enemy class
-                var rand = new Random();
-                int randomInteger = rand.Next(1, 4);
-                CharacterClass enemyClass = (CharacterClass)randomInteger;
+                CharacterClass enemyClass = (CharacterClass)GetRandomInt(1,4);
                 CharacterClassSpecific enemyClassSpecific = GetCharacterClassSpecific(enemyClass);
                 Console.WriteLine($"Enemy class choice: {enemyClass}");
-                enemyCharacter = new Character(enemyClassSpecific, 1);
+                enemyCharacter = new Character(enemyClassSpecific, 1, CharacterSkill(enemyClass));
 
                 if (isPlayerTime)
                 {
@@ -245,8 +263,8 @@ namespace AutoBattle
                 enemyCharacter.target = playerCharacter;
                 playerCharacter.target = enemyCharacter;
 
-                allPlayers.Add(playerCharacter);
-                allPlayers.Add(enemyCharacter);
+                //allPlayers.Add(playerCharacter);
+                //allPlayers.Add(enemyCharacter);
             }
 
             void StartTurn()
@@ -340,6 +358,19 @@ namespace AutoBattle
                     grid.grids[randomX, randomY] = randomLocation;
                     playerCharacter.currentLocation = grid.grids[randomX, randomY];
 
+                    if(currentTurn == 0 || currentTurn == 1)
+                    {
+                        currentTurn++;
+                        if(playerCharacter.skill.skill == CharacterSkills.Invisibility)
+                        {
+                            playerCharacter.isInvisible = true;
+                        }
+                    }
+                    else if(currentTurn > 3)
+                    {
+                        playerCharacter.isInvisible = false;
+                    }
+
                     grid.DrawBattlefield(gridSizeX, gridSizeY, isPlayerTime, playerCharacter, enemyCharacter);
                     isPlayerTime = false;
                 }
@@ -363,6 +394,19 @@ namespace AutoBattle
                     randomLocation.character = enemyCharacter;
                     grid.grids[randomX, randomY] = randomLocation;
                     enemyCharacter.currentLocation = grid.grids[randomX, randomY];
+
+                    if (currentTurn == 0 || currentTurn == 1)
+                    {
+                        currentTurn++;
+                        if (enemyCharacter.skill.skill == CharacterSkills.Invisibility)
+                        {
+                            enemyCharacter.isInvisible = true;
+                        }
+                    }
+                    else
+                    {
+                        enemyCharacter.isInvisible = false;
+                    }
 
                     grid.DrawBattlefield(gridSizeX, gridSizeY, isPlayerTime, playerCharacter, enemyCharacter);
                     isPlayerTime = true;
