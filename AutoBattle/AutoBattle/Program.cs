@@ -99,12 +99,12 @@ namespace AutoBattle
                 Console.Write(Environment.NewLine);
                 Console.WriteLine("--------------------------------");
                 Console.WriteLine("Choose how many seconds you want to wait for an action to be performed automatically");
-                Console.WriteLine("The minimum is 5 seconds");
+                Console.WriteLine("The minimum is 2 seconds");
                 string choice = Console.ReadLine();
                 int value;
                 if (int.TryParse(choice, out value))
                 {
-                    if(value < 5) value = 5;
+                    if(value < 2) value = 2;
 
                     waitTime = value * 1000;
                     Console.WriteLine("--------------------------------");
