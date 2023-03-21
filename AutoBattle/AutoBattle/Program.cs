@@ -14,20 +14,39 @@ namespace AutoBattle
             Character playerCharacter;
             Character enemyCharacter;
             List<Character> allPlayers = new List<Character>();
+
             int currentTurn = 0;
             int gridSizeX = 0;
             int gridSizeY = 0;
             int waitTime = 0;
             bool isPlayerTime = true;
+
             CharacterClassSpecific classPaladin;
             CharacterClassSpecific classWarrior;
             CharacterClassSpecific classCleric;
             CharacterClassSpecific classArcher;
+
+            CharacterSkill skillBleed;
+            CharacterSkill skillHeal;
+            CharacterSkill skillStrongAttack;
+            CharacterSkill skillInvisibility;
             #endregion
 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Hi, welcome to the Thayane Carvalho RPG Auto Battle Game!");
+
+            SetCharacterSkillsValues();
             SetClassSpecifcValues();
 
             #region Methods
+            //Setting the specifc values of heach CharacterSkill
+            void SetCharacterSkillsValues()
+            {
+                skillBleed = new CharacterSkill(CharacterSkills.Bleed, 2, 1.5f, 1);
+                skillHeal = new CharacterSkill(CharacterSkills.Heal, 2, 1, 1.5f);
+                skillStrongAttack = new CharacterSkill(CharacterSkills.StrongAttack, 1, 2, 1);
+                skillInvisibility = new CharacterSkill(CharacterSkills.Invisibility, 1, 1, 1);
+            }
 
             //Seting the health, damage and lifeRecovery of each class type
             void SetClassSpecifcValues()
@@ -44,8 +63,6 @@ namespace AutoBattle
             //Getting all of the player choices
             void GetPlayerChoices()
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("Hi, welcome to the Thayane Carvalho RPG Auto Battle Game!");
                 GetPlayerWaitTimeChoice();
                 GetPlayerGridChoice(true);
                 GetPlayerGridChoice(false);
@@ -148,10 +165,10 @@ namespace AutoBattle
             void GetPlayerTypeChoice()
             {
                 Console.WriteLine("Choose between one of this classes:");
-                Console.WriteLine($"[1] Paladin - Health: {classPaladin.health}, Damage: {classPaladin.damage}, Life recovery: {classPaladin.lifeRecovery}");
-                Console.WriteLine($"[2] Warrior - Health: {classWarrior.health}, Damage: {classWarrior.damage}, Life recovery: {classWarrior.lifeRecovery}");
-                Console.WriteLine($"[3] Cleric - Health: {classCleric.health}, Damage: {classCleric.damage}, Life recovery: {classCleric.lifeRecovery}");
-                Console.WriteLine($"[4] Archer - Health: {classArcher.health}, Damage: {classArcher.damage}, Life recovery: {classArcher.lifeRecovery}");
+                Console.WriteLine($"[1] Paladin - Health: {classPaladin.health}, Damage: {classPaladin.damage}, Life recovery: {classPaladin.lifeRecovery}, Skill: Bleed (50% more damage on your first 2 attacks)");
+                Console.WriteLine($"[2] Warrior - Health: {classWarrior.health}, Damage: {classWarrior.damage}, Life recovery: {classWarrior.lifeRecovery}, Skill: Strong Attack (Your first attack will be times 2)");
+                Console.WriteLine($"[3] Cleric - Health: {classCleric.health}, Damage: {classCleric.damage}, Life recovery: {classCleric.lifeRecovery}, Skill: Heal (50% more life recovery on enemy's first 2 attacks)");
+                Console.WriteLine($"[4] Archer - Health: {classArcher.health}, Damage: {classArcher.damage}, Life recovery: {classArcher.lifeRecovery}, Skill: Invisibility (You will become invisible in the first round)");
                 //store the player choice in a variable
                 string choiceClass = Console.ReadLine();
 
@@ -196,13 +213,33 @@ namespace AutoBattle
                 }
             }
 
+            CharacterSkill CharacterSkill(CharacterClass characterClass)
+            {
+                if (characterClass == CharacterClass.Paladin)
+                {
+                    return skillBleed;
+                }
+                else if (characterClass == CharacterClass.Warrior)
+                {
+                    return skillStrongAttack;
+                }
+                else if (characterClass == CharacterClass.Cleric)
+                {
+                    return skillHeal;
+                }
+                else
+                {
+                    return skillInvisibility;
+                }
+            }
+
             void CreatePlayerCharacter(int classIndex)
             {
                 Console.Write(Environment.NewLine);
                 CharacterClass characterClass = (CharacterClass)classIndex;
                 CharacterClassSpecific characterClassSpecific = GetCharacterClassSpecific(characterClass);
                 Console.WriteLine($"Player class choice: {characterClass}");
-                playerCharacter = new Character(characterClassSpecific, 0);
+                playerCharacter = new Character(characterClassSpecific, 0, CharacterSkill(characterClass));
                 
                 CreateEnemyCharacter();
             }
@@ -210,12 +247,10 @@ namespace AutoBattle
             void CreateEnemyCharacter()
             {
                 //Randomly choose the enemy class
-                var rand = new Random();
-                int randomInteger = rand.Next(1, 4);
-                CharacterClass enemyClass = (CharacterClass)randomInteger;
+                CharacterClass enemyClass = (CharacterClass)GetRandomInt(1,4);
                 CharacterClassSpecific enemyClassSpecific = GetCharacterClassSpecific(enemyClass);
                 Console.WriteLine($"Enemy class choice: {enemyClass}");
-                enemyCharacter = new Character(enemyClassSpecific, 1);
+                enemyCharacter = new Character(enemyClassSpecific, 1, CharacterSkill(enemyClass));
 
                 if (isPlayerTime)
                 {

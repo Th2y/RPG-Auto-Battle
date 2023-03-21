@@ -14,18 +14,20 @@ namespace AutoBattle
         public GridBox currentLocation;
         public Character target;
         public bool hasAnActive = true;
+        public CharacterSkill skill;
 
         public Character(int playerIndex) 
         {
             this.playerIndex = playerIndex;
         }
 
-        public Character(CharacterClassSpecific characterClass, int playerIndex)
+        public Character(CharacterClassSpecific characterClass, int playerIndex, CharacterSkill skill)
         {
             health = characterClass.health;
             damage = characterClass.damage;
             lifeRecovery = characterClass.lifeRecovery;
             this.playerIndex = playerIndex;
+            this.skill = skill;
         }
 
         public void TakeDamage(float amount)

@@ -37,12 +37,31 @@
             }
         }
 
-        /*public struct CharacterSkills
+        public struct CharacterSkill
         {
-            string name;
-            float damage;
-            float damageMultiplier;
-        }*/
+            public CharacterSkills skill;
+            public bool hasUsedTheSkill;
+            public int turnsToWork;
+            public float damageMultiplier;
+            public float healthRecovery;
+
+            public CharacterSkill(CharacterSkills skill, int turnsToWork, float damageMultiplier, float healthRecovery)
+            {
+                this.skill = skill;
+                this.turnsToWork = turnsToWork;
+                this.damageMultiplier = damageMultiplier;
+                this.healthRecovery = healthRecovery;
+                hasUsedTheSkill = false;
+            }
+        }
+
+        public enum CharacterSkills : uint
+        {
+            Bleed = 1,
+            Heal = 2,
+            StrongAttack = 3,
+            Invisibility = 4
+        }
 
         public enum CharacterClass : uint
         {
