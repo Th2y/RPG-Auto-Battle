@@ -84,20 +84,26 @@ namespace AutoBattle
                     if(value == 1)
                     {
                         isPlayerTime = true;
+                        Console.Write(Environment.NewLine);
                         GetPlayerTypeChoice();
                     }
                     else if(value == 2)
                     {
                         isPlayerTime = false;
+                        Console.Write(Environment.NewLine);
                         GetPlayerTypeChoice();
                     }
                     else
                     {
+                        Console.Write("Incorrect value!");
+                        Console.Write(Environment.NewLine);
                         GetPlayerWantsToStart();
                     }
                 }
                 else
                 {
+                    Console.Write("Incorrect value!");
+                    Console.Write(Environment.NewLine);
                     GetPlayerWantsToStart();
                 }
             }
