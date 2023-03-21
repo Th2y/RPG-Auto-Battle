@@ -1,7 +1,6 @@
 ﻿using AutoBattle.Grids;
 using System;
 using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AutoBattle.Characters
 {
@@ -61,7 +60,7 @@ namespace AutoBattle.Characters
         {
             foreach (CharacterClassSpecific classSpecific in characterClassSpecifics)
             {
-                if(classSpecific.characterClass == characterClass)
+                if (classSpecific.characterClass == characterClass)
                 {
                     return classSpecific;
                 }

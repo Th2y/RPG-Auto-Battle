@@ -122,7 +122,7 @@ namespace AutoBattle.Characters
         {
             Console.WriteLine("Choose between one of this classes:");
 
-            for(int i = 0; i < characterClassSpecifics.Count; i++)
+            for (int i = 0; i < characterClassSpecifics.Count; i++)
             {
                 Console.WriteLine($"[{i + 1}] {characterClassSpecifics[i].characterClass} - Health: {characterClassSpecifics[i].health}, Damage: {characterClassSpecifics[i].damage}, Life recovery: {characterClassSpecifics[i].lifeRecovery}, Skill: {CharacterSkill.GetDescription(characterClassSpecifics[i].characterClass)}");
             }

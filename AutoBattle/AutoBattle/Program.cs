@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoBattle.Characters;
-using AutoBattle.Grids;
+﻿using AutoBattle.Characters;
+using System;
 
 namespace AutoBattle
 {

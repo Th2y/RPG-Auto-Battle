@@ -1,5 +1,5 @@
-﻿using System;
-using AutoBattle.Grids;
+﻿using AutoBattle.Grids;
+using System;
 
 namespace AutoBattle.Characters
 {
@@ -215,7 +215,7 @@ namespace AutoBattle.Characters
                 //right
                 else if (index == 1)
                 {
-                    if (currentLocation.xIndex + 1 <= battlefield.xLenght && 
+                    if (currentLocation.xIndex + 1 <= battlefield.xLenght &&
                         battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex].character.playerIndex == -1)
                     {
                         currentLocation = battlefield.grids[currentLocation.xIndex + 1, currentLocation.yIndex];

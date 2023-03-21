@@ -1,5 +1,5 @@
-﻿using System;
-using AutoBattle.Characters;
+﻿using AutoBattle.Characters;
+using System;
 
 namespace AutoBattle.Grids
 {

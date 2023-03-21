@@ -17,7 +17,7 @@
             {
                 turnsToWork = 2;
                 damageMultiplier = 1.5f;
-                lifeRecovery = 1;                
+                lifeRecovery = 1;
             }
             else if (skill == CharacterSkills.Heal)
             {
@@ -41,15 +41,15 @@
 
         public static string GetDescription(CharacterClass characterClass)
         {
-            if(characterClass == CharacterClass.Paladin)
+            if (characterClass == CharacterClass.Paladin)
             {
                 description = "Bleed (50% more damage on your first 2 attacks)";
             }
-            else if(characterClass == CharacterClass.Cleric)
+            else if (characterClass == CharacterClass.Cleric)
             {
                 description = "Heal (50% more life recovery on enemy's first 2 attacks)";
             }
-            else if(characterClass == CharacterClass.Warrior)
+            else if (characterClass == CharacterClass.Warrior)
             {
                 description = "Strong Attack (Your first attack will be times 2)";
             }

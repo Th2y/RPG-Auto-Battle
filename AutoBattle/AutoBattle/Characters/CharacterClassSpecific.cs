@@ -17,13 +17,13 @@
                 damage = 20;
                 lifeRecovery = 5;
             }
-            else if(characterClass == CharacterClass.Warrior)
+            else if (characterClass == CharacterClass.Warrior)
             {
                 health = 60;
                 damage = 40;
                 lifeRecovery = 0;
             }
-            else if(characterClass == CharacterClass.Cleric)
+            else if (characterClass == CharacterClass.Cleric)
             {
                 health = 100;
                 damage = 10;
